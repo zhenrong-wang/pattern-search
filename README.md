@@ -29,3 +29,13 @@ On Windows:
 Static Analysis using Clang
 
 1. Run WindowsStaticAnalysisScript.bat
+
+
+**TODO:**
+
+1. Read two files one containing the string to search for and the other contains the tests
+2. Improve Tests to showcase the performance of each algorithm
+3. Make Two Modes: Line-By-Line Mode && Whole Text Mode
+4. add other algorithms
+5. follow the static analysis guidelines and fix code accordingly
+6. implement a new version of each algorithm where it uses arena allocation instead of malloc/calloc
