@@ -10,71 +10,72 @@
  * Results Format: POSITION_FOUND:TIME_CONSUMED
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 #include <fstream>
+#include <string>
+
 using namespace std;
 
-size_t* create_next_array(char* string){
-    size_t i=0,j=1,length=0;
-    if(string==NULL||(length=strlen(string))<1){
-        return NULL;
+size_t* create_next_array(char* string) {
+    size_t i = 0, j = 1, length = 0;
+    if (string == nullptr || (length = strlen(string)) < 1) {
+        return nullptr;
     }
-    size_t* next_array=(size_t*)calloc(length,sizeof(size_t));
-    if(next_array==NULL){
-        return NULL;
+    size_t* next_array = (size_t*)calloc(length, sizeof(size_t));
+    if (next_array == nullptr) {
+        return nullptr;
     }
-    while(j<length){
-        if(string[j]==string[i]){
-            next_array[j]=next_array[j-1]+1;
+    while (j < length) {
+        if (string[j] == string[i]) {
+            next_array[j] = next_array[j - 1] + 1;
             i++;
             j++;
         }
-        else{
-            if(!i){
-                next_array[j]=0;
+        else {
+            if (!i) {
+                next_array[j] = 0;
                 j++;
             }
-            else{
-                i=next_array[i-1];
+            else {
+                i = next_array[i - 1];
             }
         }
     }
     return next_array;
 }
 
-int contain_or_not_kmp(char line[], char findkey[]){
-    size_t line_len=0;
-    size_t key_len=0;
-    size_t i=0,j=0;
-    if(line==NULL||findkey==NULL){
+int contain_or_not_kmp(char line[], char findkey[]) {
+    size_t line_len = 0;
+    size_t key_len = 0;
+    size_t i = 0, j = 0;
+    if (line == nullptr || findkey == nullptr) {
         return -1;
     }
-    line_len=strlen(line);
-    key_len=strlen(findkey);
-    if(line_len<key_len||key_len==0){
+    line_len = strlen(line);
+    key_len = strlen(findkey);
+    if (line_len < key_len || key_len == 0) {
         return -1;
     }
-    size_t* next_array=create_next_array(findkey);
-    if(next_array==NULL){
+    size_t* next_array = create_next_array(findkey);
+    if (next_array == nullptr) {
         return -1;
     }
-    while(i<line_len){
-        if(line[i]==findkey[j]){
+    while (i < line_len) {
+        if (line[i] == findkey[j]) {
             i++;
             j++;
-            if(j==key_len){
+            if (j == key_len) {
                 free(next_array);
-                return i-j;
+                return i - j;
             }
         }
-        else{
-            if(j!=0){
-                j=next_array[j-1];
+        else {
+            if (j != 0) {
+                j = next_array[j - 1];
             }
-            else{
+            else {
                 i++;
             }
         }
@@ -84,45 +85,45 @@ int contain_or_not_kmp(char line[], char findkey[]){
 }
 
 /* The naive way (brute comparison) */
-int contain_or_not(char line[], char findkey[]){
-    size_t line_len=0;
-    size_t key_len=0;
-    if(line==NULL||findkey==NULL){
+int contain_or_not(char line[], char findkey[]) {
+    size_t line_len = 0;
+    size_t key_len = 0;
+    if (line == nullptr || findkey == nullptr) {
         return -5;
     }
-    line_len=strlen(line);
-    key_len=strlen(findkey);
-    if(line_len<key_len){
+    line_len = strlen(line);
+    key_len = strlen(findkey);
+    if (line_len < key_len) {
         return -1;
     }
-    if(key_len==0){
+    if (key_len == 0) {
         return -3;
     }
-    size_t i=0;
-    while(i<line_len-key_len+1){
-        if(memcmp(findkey,line+i,key_len)==0){
+    size_t i = 0;
+    while (i < line_len - key_len + 1) {
+        if (memcmp(findkey, line + i, key_len) == 0) {
             return i;
         }
-        else{
+        else {
             i++;
         }
     }
     return -1;
 }
 
-int main(int argc, char** argv){
-    if(argc<2){
+int main(int argc, char** argv) {
+    if (argc < 2) {
         printf("Please provide a file to read.\n");
         return 1;
     }
-    FILE* file_p=fopen(argv[1],"r");
-    if(file_p==NULL){
-        printf("Failed to open %s.\n",argv[1]);
+    FILE* file_p = fopen(argv[1], "r");
+    if (file_p == nullptr) {
+        printf("Failed to open %s.\n", argv[1]);
         return 3;
     }
-    char buffer[65536]="";
+    char buffer[65536] = "";
     string line_str;
-    clock_t start,end;
+    clock_t start, end;
     int result_c;
     size_t result_cpp;
     printf("\nThis is an non-strict benchmark to compare the performance of pattern search.\n");
@@ -132,31 +133,31 @@ int main(int argc, char** argv){
     printf("\t1. C-naive (brute)\n\t2. C-KMP (good)\n\t3. CPP - string.find() method.\n");
     printf("Results: POSITION_FOUND:TIME_CONSUMED\n");
     printf("C - naive (brute):\t");
-    while(!feof(file_p)){
-        memset(buffer,'\0',65536);
-        if(fgets(buffer,65535,file_p)==NULL){
+    while (!feof(file_p)) {
+        memset(buffer, '\0', 65536);
+        if (fgets(buffer, 65535, file_p) == nullptr) {
             break;
         }
-        start=clock();
-        result_c=contain_or_not(buffer,(char*)"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa world");
-        end=clock();
-        if(strlen(buffer)!=0){
-            printf("%d:%ld\t",result_c,end-start);
+        start = clock();
+        result_c = contain_or_not(buffer, (char*)"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa world");
+        end = clock();
+        if (strlen(buffer) != 0) {
+            printf("%d:%ld\t", result_c, end - start);
         }
     }
     putchar('\n');
     rewind(file_p);
     printf("C - KMP algorithm:\t");
-    while(!feof(file_p)){
-        memset(buffer,'\0',65536);
-        if(fgets(buffer,65535,file_p)==NULL){
+    while (!feof(file_p)) {
+        memset(buffer, '\0', 65536);
+        if (fgets(buffer, 65535, file_p) == nullptr) {
             break;
         }
-        start=clock();
-        result_c=contain_or_not_kmp(buffer,(char*)"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa world");
-        end=clock();
-        if(strlen(buffer)!=0){
-            printf("%d:%ld\t",result_c,end-start);
+        start = clock();
+        result_c = contain_or_not_kmp(buffer, (char*)"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa world");
+        end = clock();
+        if (strlen(buffer) != 0) {
+            printf("%d:%ld\t", result_c, end - start);
         }
     }
     fclose(file_p);
@@ -164,15 +165,15 @@ int main(int argc, char** argv){
 
     printf("CPP - string.find():\t");
     ifstream file(argv[1]);
-    if(!file.is_open()){
-        printf("Failed to open %s.\n",argv[1]);
+    if (!file.is_open()) {
+        printf("Failed to open %s.\n", argv[1]);
         return 3;
     }
-    while(getline(file,line_str)){
-        start=clock();
-        result_cpp=line_str.find("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa world");
-        end=clock();
-        printf("%ld:%ld\t",result_cpp,end-start);
+    while (getline(file, line_str)) {
+        start = clock();
+        result_cpp = line_str.find("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa world");
+        end = clock();
+        printf("%u:%ld\t", result_cpp, end - start);
     }
     putchar('\n');
     return 0;

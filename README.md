@@ -19,3 +19,13 @@ How-to:
 1. clone or fork this repo.
 2. g++ main.cpp -O3 -Wall (Options are optional)
 3. ./a.out test.txt
+
+On Windows:
+
+1. Run the WindowsBuildScript.bat for building executables for different optimisations levels
+2. The build file is customizable so choose your own standard version and the output folder
+
+
+Static Analysis using Clang
+
+1. Run WindowsStaticAnalysisScript.bat
