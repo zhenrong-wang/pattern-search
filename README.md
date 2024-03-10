@@ -17,18 +17,23 @@ Command Format: EXE_PATH FILE_PATH  E.g. `./a.out test.txt`
 How-to:
 
 1. clone or fork this repo.
-2. g++ main.cpp -O3 -Wall (Options are optional)
+2. g++ *.cpp -O3 -Wall (Options are optional)
 3. ./a.out test.txt
+
+*NOTE:*
+
+  - I would rather try different optimisations flags to check which has the best performance: **-Os, -Ofast, -O2, -O3**.
+  - The Static Analysis Script uses Clang
 
 On Windows:
 
-1. Run the WindowsBuildScript.bat for building executables for different optimisations levels
+1. Run the Scripts/Windows/Build.bat for building executables for different optimisations levels
 2. The build file is customizable so choose your own standard version and the output folder
 
 
 Static Analysis using Clang
 
-1. Run WindowsStaticAnalysisScript.bat
+1. Run Scripts/Windows/StaticAnalysis.bat
 
 
 **TODO:**
