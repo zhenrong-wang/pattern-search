@@ -1,10 +1,14 @@
 @echo off
+setlocal
 
-REM Main.cpp file
-set MAIN_FILE=main.cpp
+REM Project Root
+SET "ROOT="
+FOR %%A IN ("..\..\") DO SET "ROOT=%%~dpA"
+
+echo Proceeding in %ROOT%
 
 REM Output directory
-set OUTPUT_DIR=output
+SET "OUTPUT_DIR=%ROOT%output"
 
 REM C++ standard version
 set CPP_STANDARD=c++17
@@ -14,7 +18,7 @@ mkdir "%OUTPUT_DIR%" 2>nul
 
 REM Generate all warnings
 echo Generating all warnings:
-g++ -Wall -Wextra -Wformat-security -Wformat-signedness -Wredundant-decls -Wfloat-equal -Wduplicated-cond -Wshadow -pedantic -Werror -std=%CPP_STANDARD% -o "%OUTPUT_DIR%\%MAIN_FILE%_warnings.exe" "%MAIN_FILE%"
+g++ %ROOT%*.cpp -Wall -Wextra -Wformat-security -Wformat-signedness -Wredundant-decls -Wfloat-equal -Wduplicated-cond -Wshadow -pedantic -Werror -std=%CPP_STANDARD% -o "%OUTPUT_DIR%\main_warnings.exe"
 
 REM Check if compilation and analysis were successful
 if %ERRORLEVEL% equ 0 (
