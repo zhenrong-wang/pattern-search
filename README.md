@@ -17,5 +17,30 @@ Command Format: EXE_PATH FILE_PATH  E.g. `./a.out test.txt`
 How-to:
 
 1. clone or fork this repo.
-2. g++ main.cpp -O3 -Wall (Options are optional)
+2. g++ *.cpp -O3 -Wall (Options are optional)
 3. ./a.out test.txt
+
+*NOTE:*
+
+  - I would rather try different optimisations flags to check which has the best performance: **-Os, -Ofast, -O2, -O3**.
+  - The Static Analysis Script uses Clang
+
+On Windows:
+
+1. Run the Scripts/Windows/Build.bat for building executables for different optimisations levels
+2. The build file is customizable so choose your own standard version and the output folder
+
+
+Static Analysis using Clang
+
+1. Run Scripts/Windows/StaticAnalysis.bat
+
+
+**TODO:**
+
+1. Read two files one containing the string to search for and the other contains the tests
+2. Improve Tests to showcase the performance of each algorithm
+3. Make Two Modes: Line-By-Line Mode && Whole Text Mode
+4. add other algorithms
+5. follow the static analysis guidelines and fix code accordingly
+6. implement a new version of each algorithm where it uses arena allocation instead of malloc/calloc
