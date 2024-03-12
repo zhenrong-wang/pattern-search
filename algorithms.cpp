@@ -152,6 +152,7 @@ int contain_or_not(char line[], char findkey[]) {
 }
 
 /* This is a driver to test random string and random substring generator. */
+/*
 int main(){
     char randstr[512]="";
     char* substr = nullptr;
@@ -164,4 +165,4 @@ int main(){
         return 0;
     }
     return 1;
-}
+}*/
