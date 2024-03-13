@@ -16,9 +16,27 @@
 
 #include"algorithms.hpp"
 
-#define BM_ROUNDS     128 /* Please adjust this macro along with the BM_INTERVAL to control the random string generation */
-#define BM_INTERVAL   4
-#define BM_LENGTH_INC 1
+/* 
+ * MACROS to adjust the benchmark rounds and steps.
+ *      BM_ROUNDS     : how many random_strings & random_substrings
+ *      BM_INTERVAL   : subgroup with same length
+ *      BM_LENGTH_STEP: random string length increment step
+ * 
+ * E.g. BM_ROUNDS = 8, BM_INTERVAL = 2, BM_LENGTH_STEP = 1
+ *      The random strings would be like:
+ *      1. xxxx
+ *      2. xxxx // BM_INTERVAL = 2 means each subgroup includes 2 strings
+ *      3. xxxxxxxx // BM_LENGTH_STEP = 1 means the length << 1 (X2)
+ *      4. xxxxxxxx
+ *      5. xxxxxxxxxxxxxxxx
+ *      6. xxxxxxxxxxxxxxxx
+ *      7. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ *      8. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx // Total strings = BM_ROUNDS
+ */
+
+#define BM_ROUNDS      128
+#define BM_INTERVAL    6
+#define BM_LENGTH_STEP 1  
 
 using namespace std;
 
@@ -46,7 +64,7 @@ int main(int argc, char** argv) {
         printf("GENERATED: ROUND: %ld\t RANDOM_STRING_LENGTH: %ld\n",i,length);
         i++;
         if(i % BM_INTERVAL == 0) {
-            length = length << BM_LENGTH_INC;
+            length = length << BM_LENGTH_STEP;
         }
     }
     printf(" START BENCHMARK ...\n");
@@ -73,12 +91,11 @@ int main(int argc, char** argv) {
     }
     end = clock();
     printf("TIME CONSUMED: %ld\n", end - start);
-    return 0;
+    return 0;    
 
+    /* Below is the original file_I/O based main function.
 
-    
-
-    /*if (argc < 2) {
+    if (argc < 2) {
         printf("Please provide a file to read.\n");
         return 1;
     }
