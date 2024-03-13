@@ -16,7 +16,9 @@
 
 #include"algorithms.hpp"
 
-#define BM_ROUNDS 128
+#define BM_ROUNDS     128 /* Please adjust this macro along with the BM_INTERVAL to control the random string generation */
+#define BM_INTERVAL   4
+#define BM_LENGTH_INC 1
 
 using namespace std;
 
@@ -41,10 +43,10 @@ int main(int argc, char** argv) {
         }
         //display_benchmark_string(bm_string + i);
         construct_cpp_strings(bm_string + i, cpp_randstr + i, cpp_rand_substr + i);
-        printf("%ld\t%ld\n",i,length);
+        printf("GENERATED: ROUND: %ld\t RANDOM_STRING_LENGTH: %ld\n",i,length);
         i++;
-        if(i%6 == 0) {
-            length = length << 1;
+        if(i % BM_INTERVAL == 0) {
+            length = length << BM_LENGTH_INC;
         }
     }
     printf(" START BENCHMARK ...\n");
