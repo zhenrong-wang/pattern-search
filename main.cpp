@@ -18,9 +18,10 @@
 
 /* 
  * MACROS to adjust the benchmark rounds and steps.
- *      BM_ROUNDS     : how many random_strings & random_substrings
- *      BM_INTERVAL   : subgroup with same length
- *      BM_LENGTH_STEP: random string length increment step
+ *      BM_LENGTH_START: the starting length of random strings
+ *      BM_ROUNDS      : how many random_strings & random_substrings
+ *      BM_INTERVAL    : subgroup with same length
+ *      BM_LENGTH_STEP : random string length increment step
  * 
  * E.g. BM_ROUNDS = 8, BM_INTERVAL = 2, BM_LENGTH_STEP = 1
  *      The random strings would be like:
@@ -34,9 +35,10 @@
  *      8. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx // Total strings = BM_ROUNDS
  */
 
-#define BM_ROUNDS      128
-#define BM_INTERVAL    6
-#define BM_LENGTH_STEP 1  
+#define BM_LENGTH_START 4
+#define BM_ROUNDS       256
+#define BM_INTERVAL     8
+#define BM_LENGTH_STEP  1  
 
 using namespace std;
 
@@ -44,7 +46,7 @@ int main(int argc, char** argv) {
 
     benchmark_string bm_string[BM_ROUNDS];
     size_t i = 0, j;
-    size_t length = 4;
+    size_t length = BM_LENGTH_START;
     int result_c = 0;
     size_t result_cpp = -1;
     string cpp_randstr[BM_ROUNDS];
