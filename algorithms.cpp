@@ -43,11 +43,11 @@ char* generate_random_substring(const char* random_string, size_t* position, siz
     /* create a random seed num using the time */
     seed_num = (unsigned int) (current_time.tv_sec*1000000000 + current_time.tv_nsec);
     srand(seed_num);
-    *position = rand() % full_length;
-    *substring_length = rand() % full_length;
+    *position = rand() % (full_length - 1);
+    *substring_length = rand() % full_length + 1;
     if((*position + *substring_length) > full_length) {
         *substring_length = full_length - *position;
-    } 
+    }
     substring = (char*) calloc (*substring_length + 1, sizeof(char));
     if(substring == nullptr) {
         *position = -1;
@@ -56,6 +56,74 @@ char* generate_random_substring(const char* random_string, size_t* position, siz
     }
     memcpy(substring, random_string + *position, *substring_length);
     return substring;
+}
+
+void empty_benchmark_string (benchmark_string* bm_string) {
+    if(bm_string->random_string != nullptr) {
+        free(bm_string->random_string);
+    }
+    bm_string->random_string_length = -1;
+    if(bm_string->random_substring != nullptr) {
+        free(bm_string->random_substring);
+    }
+    bm_string->random_substring_length = -1;
+    bm_string->random_substring_position = -1;
+}
+
+int create_benchmark_string (benchmark_string* bm_string, size_t random_string_length) {
+    if(bm_string == nullptr) {
+        return -7;
+    }
+    char *random_str_temp=nullptr, *random_substr_temp=nullptr;
+    size_t random_substr_pos_temp=0, random_substr_len_tem=0;
+
+    bm_string->random_string = nullptr;
+    bm_string->random_substring = nullptr;
+    bm_string->random_string_length = -1;
+    bm_string->random_substring_length = -1;
+    bm_string->random_substring_position = -1;
+
+    random_str_temp = (char*)calloc(random_string_length,sizeof(char));
+    if(random_str_temp == nullptr) {
+        return -5;
+    }
+    if(generate_random_string(random_str_temp, random_string_length, 1) != 0) {
+        return -3;
+    }
+    random_substr_temp = generate_random_substring(random_str_temp, &random_substr_pos_temp, &random_substr_len_tem);
+    if(random_substr_temp == nullptr) {
+        return -1;
+    }
+
+    bm_string->random_string = random_str_temp;
+    bm_string->random_substring = random_substr_temp;
+    bm_string->random_string_length = random_string_length;
+    bm_string->random_substring_length = random_substr_len_tem;
+    bm_string->random_substring_position = random_substr_pos_temp;
+
+    return 0;
+}
+
+/* Caution! Do not use this function if the string is very long! */
+void display_benchmark_string (benchmark_string* bm_string) {
+    if(bm_string == nullptr) {
+        printf("Null struct.\n");
+        return;
+    }
+    if(bm_string->random_string_length > 512) {
+        printf("Too long.\n");
+        return;
+    }
+    printf("%s\n%s\n%ld\n%ld\n", bm_string->random_string, bm_string->random_substring, bm_string->random_substring_position, bm_string->random_substring_length);
+}
+
+int construct_cpp_strings(benchmark_string* bm_string, std::string* cpp_randstr, std::string* cpp_rand_substr) {
+    if(bm_string == nullptr || cpp_randstr == nullptr || cpp_rand_substr == nullptr){
+        return -1;
+    }
+    *cpp_randstr = bm_string->random_string;
+    *cpp_rand_substr = bm_string->random_substring;
+    return 0;
 }
 
 size_t* create_next_array(char* string) {

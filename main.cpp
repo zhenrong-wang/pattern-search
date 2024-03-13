@@ -16,10 +16,67 @@
 
 #include"algorithms.hpp"
 
+#define BM_ROUNDS 128
+
 using namespace std;
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
+int main(int argc, char** argv) { 
+
+    benchmark_string bm_string[BM_ROUNDS];
+    size_t i = 0, j;
+    size_t length = 4;
+    int result_c = 0;
+    size_t result_cpp = -1;
+    string cpp_randstr[BM_ROUNDS];
+    string cpp_rand_substr[BM_ROUNDS];
+    clock_t start, end;
+
+    while(i < BM_ROUNDS) {
+        if(create_benchmark_string(bm_string + i, length)!=0){
+            printf(" Failed to create a benchmark string %ld .\n", i);
+            for (j=0; j<i; j++) {
+                empty_benchmark_string(bm_string + j);
+            }
+            return 3;
+        }
+        //display_benchmark_string(bm_string + i);
+        construct_cpp_strings(bm_string + i, cpp_randstr + i, cpp_rand_substr + i);
+        printf("%ld\t%ld\n",i,length);
+        i++;
+        if(i%6 == 0) {
+            length = length << 1;
+        }
+    }
+    printf(" START BENCHMARK ...\n");
+    start = clock();
+    for(i=0; i<BM_ROUNDS; i++) {
+        result_c = contain_or_not(bm_string[i].random_string, bm_string[i].random_substring);
+        //printf("::: %ld\t%ld\t: %ld\n", bm_string[i].random_string_length, bm_string[i].random_substring_position,result_c);
+    }
+    end = clock();
+    printf("TIME CONSUMED: %ld\n", end - start);
+
+    start = clock();
+    for(i=0; i<BM_ROUNDS; i++) {
+        result_c = contain_or_not_kmp(bm_string[i].random_string, bm_string[i].random_substring);
+        //printf("::: %ld\t%ld\t: %ld\n", bm_string[i].random_string_length, bm_string[i].random_substring_position,result_c);
+    }
+    end = clock();
+    printf("TIME CONSUMED: %ld\n", end - start);
+
+    start = clock();
+    for(i=0; i<BM_ROUNDS; i++) {
+        result_cpp = cpp_randstr[i].find(cpp_rand_substr[i]);
+        //printf("::: %ld\t: %ld\n", cpp_randstr[i].length(), result_cpp);
+    }
+    end = clock();
+    printf("TIME CONSUMED: %ld\n", end - start);
+    return 0;
+
+
+    
+
+    /*if (argc < 2) {
         printf("Please provide a file to read.\n");
         return 1;
     }
@@ -83,5 +140,5 @@ int main(int argc, char** argv) {
         printf("%u:%ld\t", result_cpp, end - start);
     }
     putchar('\n');
-    return 0;
+    return 0;*/
 }
