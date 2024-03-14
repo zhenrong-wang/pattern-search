@@ -7,7 +7,6 @@
  *  1. C-naive (brute)
  *  2. C-KMP (good)
  *  3. CPP - string.find() method.
- * Results Format: POSITION_FOUND:TIME_CONSUMED
  */
 
 #include <cstdio>
@@ -27,7 +26,7 @@
  *      The random strings would be like:
  *      1. xxxx
  *      2. xxxx // BM_INTERVAL = 2 means each subgroup includes 2 strings
- *      3. xxxxxxxx // BM_LENGTH_STEP = 1 means the length << 1 (X2)
+ *      3. xxxxxxxx // BM_LENGTH_STEP = 1 means the length << 1 ( X 2 )
  *      4. xxxxxxxx
  *      5. xxxxxxxxxxxxxxxx
  *      6. xxxxxxxxxxxxxxxx
@@ -37,8 +36,8 @@
 
 #define BM_LENGTH_START 4
 #define BM_ROUNDS       256
-#define BM_INTERVAL     8
-#define BM_LENGTH_STEP  1  
+#define BM_INTERVAL     12
+#define BM_LENGTH_STEP  1
 
 using namespace std;
 
@@ -69,14 +68,14 @@ int main(int argc, char** argv) {
             length = length << BM_LENGTH_STEP;
         }
     }
-    printf(" START BENCHMARK ...\n");
+    printf("\nALL STRINGS GENERATED. NOW START THE BENCHMARK ...\n");
     start = clock();
     for(i=0; i<BM_ROUNDS; i++) {
         result_c = contain_or_not(bm_string[i].random_string, bm_string[i].random_substring);
         //printf("::: %ld\t%ld\t: %ld\n", bm_string[i].random_string_length, bm_string[i].random_substring_position,result_c);
     }
     end = clock();
-    printf("TIME CONSUMED: %ld\n", end - start);
+    printf("C-BRUTE\tTIME CONSUMED: %ld\n", end - start);
 
     start = clock();
     for(i=0; i<BM_ROUNDS; i++) {
@@ -84,7 +83,11 @@ int main(int argc, char** argv) {
         //printf("::: %ld\t%ld\t: %ld\n", bm_string[i].random_string_length, bm_string[i].random_substring_position,result_c);
     }
     end = clock();
-    printf("TIME CONSUMED: %ld\n", end - start);
+    printf("C-KMP\tTIME CONSUMED: %ld\n", end - start);
+
+    for(i=0; i<BM_ROUNDS; i++) {
+        empty_benchmark_string(bm_string + i);
+    }
 
     start = clock();
     for(i=0; i<BM_ROUNDS; i++) {
@@ -92,7 +95,7 @@ int main(int argc, char** argv) {
         //printf("::: %ld\t: %ld\n", cpp_randstr[i].length(), result_cpp);
     }
     end = clock();
-    printf("TIME CONSUMED: %ld\n", end - start);
+    printf("CPP\tTIME CONSUMED: %ld\n", end - start);
     return 0;    
 
     /* Below is the original file_I/O based main function.
