@@ -9,12 +9,14 @@ Methods:
   1. C-naive (brute)
   2. C-KMP (good)
   3. CPP - string.find() method.
-     
-Results Format: POSITION_FOUND:TIME_CONSUMED
 
-Command Format: EXE_PATH FILE_PATH  E.g. `./a.out test.txt`
+**How-to:**
 
-How-to:
+**Prerequisites:**
+
+This code is cross-platform. However, you need [mingw-w64](https://sourceforge.net/projects/mingw-w64/) on Windows platform because some POSIX APIs are included. See the code for details.
+
+**Main steps:**
 
 1. clone or fork this repo.
 2. g++ *.cpp -O3 -Wall (Options are optional)

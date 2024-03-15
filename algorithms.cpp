@@ -1,5 +1,12 @@
 #include"algorithms.hpp"
 
+/* 
+ * clock_gettime() is POSIX API.
+ * For Windows users, please use mingw-w64. MSVC or Windows-native libraries don't work.
+ * If you are familiar with Win32 APIs of high-resolution clock, please modify the code 
+ * accordingly.
+ */
+
 int generate_random_string(char random_string[], unsigned int length, int start_flag){
     int i, rand_num;
     struct timespec current_time;
